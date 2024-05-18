@@ -23,6 +23,7 @@ export interface IProductList {
     products: IProduct[];
     total: number;
     preview: string | null;
+    setProducts(products:IProduct[]):void;
     getProduct(productId:string): IProduct;
 
 }
