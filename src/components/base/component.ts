@@ -1,0 +1,46 @@
+import { IEvents } from "./events";
+
+/**
+ * Базовый компонент
+ */
+export abstract class Component<T> {
+
+    protected container: HTMLElement;
+    protected events: IEvents;
+
+    protected constructor(container: HTMLElement, events: IEvents) {
+    this.container = container;
+    this.events = events;
+    }
+
+    // Установить текстовое содержимое
+    protected setText(element: HTMLElement, value: unknown) {
+        if (element) {
+            element.textContent = String(value);
+        }
+    }
+
+    // Сменить статус блокировки
+    setDisabled(element: HTMLElement, state: boolean) {
+        if (element) {
+            if (state) element.setAttribute('disabled', 'disabled');
+            else element.removeAttribute('disabled');
+        }
+    }
+
+    // Установить изображение с алтернативным текстом
+    protected setImage(element: HTMLImageElement, src: string, alt?: string) {
+        if (element) {
+            element.src = src;
+            if (alt) {
+                element.alt = alt;
+            }
+        }
+    }
+
+    // Вернуть корневой DOM-элемент
+    render(data?: Partial<T>): HTMLElement {
+        Object.assign(this as object, data ?? {});
+        return this.container;
+    }
+}

@@ -1,52 +1,99 @@
+import { ApiPostMethods } from "../components/base/api";
+
 export interface IProduct {
     title: string;
     description: string;
     price: number | null;
     image: string;
     category: string;
-    _id: string;
+    id: string;
 }
 
-export interface IUser {
-    payment: string;
+export interface IOrderData {
+    payment: TPayment;
     address: string;
     email: string;
-    number: string;
-}
-
-export interface IOrder {
-    _id: string;
+    phone: string;
+    items: string[];
     total: number;
+
+    setUserPayAddress(userData:TUserPayAddress):void;
+    setUserEmailPhone(userData:TUserEmailTelephone):void;
+    setOrderProduct(userData:TOrderData):void;
 }
 
 export interface IProductList {
     products: IProduct[];
-    total: number;
-    preview: string | null;
-    setProducts(products:IProduct[]):void;
-    getProduct(productId:string): IProduct;
+    // total: number;
+    // setProducts(products:IProduct[]):void;
+    getProductById(productId:string): IProduct;
 
 }
 
 export interface IBasketModel {
-    totalOrder:TOrderTotal;
-    items: Map<string, number>;
-    addProduct(id:string):void;
+    // totalOrder:TOrderTotal;
+    items: IProduct[];
+    addProduct(product:IProduct):void;
     removeProduct(id:string):void;
 }
 
-export interface IUserData {
-    setUserPayAddress(userData:TUserPayAddress):void;
-    setUserEmailPhone(userData:TUserEmailTelephone):void;
-    checkUserValidation(data:Record<keyof IUser, string>):boolean;
+export interface ISuccessData {
+    orderSuccess: TSuccessData;
 }
 
-export type TProductMainPage = Pick<IProduct, 'title' | 'price' | 'image' | 'category'>
+export interface IAppApi {
+    getProducts(): Promise<IProduct[]>;
+    // getProductById(id: string): Promise<IProduct>;
+    // postOrder(order: ICustomer): Promise<TSuccessData>;
+  }
 
-export type TOrderTotal = Pick<IOrder, 'total'>
+export interface IProductView {
+    id: string;
+    title: string;
+    price: string;
+}
+
+export interface IProductBasket {
+    index: number;
+}
+
+export interface IProductCatalog {
+    image: string;
+    category: string;
+}
+
+export interface IProductPreview {
+    description: string;
+    checkPrice: boolean;
+}
+
+export interface IMainPage {
+    catalog: HTMLElement[];
+    basketCounter: number;
+}
+
+export interface IModal {
+    content: HTMLElement;
+    open(): void;
+    close(): void;
+}
+
+export type TProductMainPage = Omit<IProduct, 'description'>;
+
+export type TOrderTotal = Pick<IOrderData, 'total'>
 
 export type TBasket = Pick<IProduct, 'title'| 'price'> & TOrderTotal
 
-export type TUserPayAddress = Pick<IUser, 'address' | 'payment'>
+export type TUserPayAddress = Pick<IOrderData, 'address' | 'payment'>
 
-export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
+export type TUserEmailTelephone = Pick<IOrderData, 'email' | 'phone'>
+
+export type TOrderData = Pick<IOrderData, 'total' | 'items'>
+
+export type TPayment = 'card' | 'cash'
+
+export type TSuccessData = { id: string, total: number} 
+
+export type TInfoOrder = Pick<IOrderData, 'payment' | 'address'| 'email' | 'phone'| 'total' | "items" >
+
+export type TId = {id: string};

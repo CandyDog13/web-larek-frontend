@@ -177,7 +177,7 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 Конструктор класса принимает инстанты брокера событий\
 В полях хранятся следующие данные:
 - `_totalOrder:TOrderTotal;` - значение суммы заказов
-- `_items: Map<string, number>;` - список заказов
+- `_items: Map<string, number>;` - список заказов/~~~
 - `events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
 
 Методы взаимодействия: 
@@ -194,7 +194,7 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 - `payment: string;` - параметр вида оплаты
 - `address: string;` - адрес доставки
 - `email: string;` - электронная почта для заказа
-- `number: string;` -  номер телефона покупателя
+- `phone: string;` -  номер телефона покупателя
 - `events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
 
 Также в классе присутстуют методы для работы с данными:
@@ -304,6 +304,7 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 - products: changed - изменение массива товаров
 
 *События, возникающие при взаимодействии пользователя с интерфейсом (генерируются классами, отвечающими за представление)*
+- modal-preview: open - открытие модального окна предпросмотра
 - modal:open - открытие модального окна
 - modal:close - закрытие модального окна
 - order:submit - сохранение данных об оплате и адресе
@@ -313,3 +314,5 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 - product:add - добавление товара в корзину
 - product:delete - удаление товара из корзины
 - product:select - выбор товара для показа его превью
+- basket:changed - изменение корзины товаров
+- success:changed - изменение модалки с умпешной отправкой
