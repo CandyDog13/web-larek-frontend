@@ -65,6 +65,7 @@ export interface IProductCatalog {
 export interface IProductPreview {
     description: string;
     checkPrice: boolean;
+    stateTitleButton: boolean;
 }
 
 export interface IMainPage {
@@ -77,6 +78,12 @@ export interface IModal {
     open(): void;
     close(): void;
 }
+
+export interface IBasket {
+    listProducts: HTMLElement[];
+    checkEmptyBasket: boolean;
+    total: number
+  }
 
 export type TProductMainPage = Omit<IProduct, 'description'>;
 

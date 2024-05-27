@@ -18,13 +18,13 @@ export class BasketModel implements IBasketModel {
     addProduct(product:IProduct) {
         if(!this._items.find((item)=> (item.id===product.id))) {
             this._items.push(product);
-            this.events.emit('product:add');
+            this.events.emit('product:changed', {id: product.id});
         }
     }
 
     removeProduct(id: string): void {
-        this._items.filter((item)=>(item.id!==id))
-        this.events.emit('product:delete');
+        this._items=this._items.filter((item)=>(item.id!==id))
+        this.events.emit('product:changed', {id});
     }
 
     clear() {
@@ -34,5 +34,13 @@ export class BasketModel implements IBasketModel {
 
     calculatePrice() {
         return this._items.reduce((sum, item)=>sum+=item.price,0);
+    }
+
+    checkProduct(id: string) {
+        return Boolean(this._items.find(product => product.id === id))
+    }
+
+    checkLength() {
+        return this._items.length;
     }
 }

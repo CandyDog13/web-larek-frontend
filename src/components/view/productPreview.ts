@@ -16,9 +16,9 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
         this.buttonBuyRemove = ensureElement<HTMLButtonElement>('.card__button', container);
         this.buttonBuyRemove.addEventListener('click', ()=> {
             if (this.buttonBuyRemove.textContent === 'В корзину') {
-                this.events.emit('basket:add', {id: this.id}
-                )}
-            else {this.events.emit('basket:delete', {id: this.id})}
+                this.events.emit('product:add', {id: this.id})
+            }
+            else {this.events.emit('product:delete', {id: this.id})}
         })
     }
     set image(src: string) {
@@ -42,6 +42,18 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
         } else {
             this.buttonBuyRemove.disabled = !value;
             this.buttonBuyRemove.textContent = 'В корзину';
+        }
+    }
+
+    get checkPrice() {
+        return this.buttonBuyRemove.disabled;
+    }
+
+    set stateTitleButton(value:boolean) {
+        if(value) {
+            this.buttonBuyRemove.textContent = "Убрать из корзины"
+        } else {
+            this.buttonBuyRemove.textContent  = "В корзину"
         }
     }
 }

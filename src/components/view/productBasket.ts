@@ -11,6 +11,9 @@ export class ProductBasket extends Product<IProductBasket> implements IProductBa
         super(container, events);
         this._index = ensureElement<HTMLSpanElement>('.basket__item-index', container);
         this.buttonProductDelete = ensureElement<HTMLButtonElement>('.basket__item-delete', container);
+        this.buttonProductDelete.addEventListener('click', ()=> {
+            events.emit('product:delete', {id:this.id});
+        })
     }
 
     set index(value: number) {

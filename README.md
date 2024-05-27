@@ -307,6 +307,8 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 - modal-preview: open - открытие модального окна предпросмотра
 - modal:open - открытие модального окна
 - modal:close - закрытие модального окна
+- modal-order:open - открытие модального окна оплаты и адреса
+- modal-basket:open - открытие модального окна корзины
 - order:submit - сохранение данных об оплате и адресе
 - order:validation - валидация формы оплаты и адреса
 - contacts:submit - сохранение данных контактов
