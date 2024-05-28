@@ -8,13 +8,14 @@ import { AppApi } from './components/AppApi';
 import { API_URL, CDN_URL } from './utils/constants';
 import { Product } from './components/view/product';
 import { cloneTemplate, ensureElement } from './utils/utils';
-import { IProductCatalog, IProduct, TProductMainPage, TId } from './types/index'
+import { IProductCatalog, IProduct, TProductMainPage, TId, TPayment } from './types/index'
 import { ProductCatalog } from './components/view/productCatalog';
 import { ProductPreview } from './components/view/productPreview';
 import { ProductBasket } from './components/view/productBasket';
 import { MainPage } from './components/view/mainPage';
 import { Modal } from './components/view/modal';
 import { Basket } from './components/view/basket';
+import { OrderForm } from './components/view/orderForm';
 
 
 // "Экземпляр класса EventEmitter"
@@ -44,6 +45,7 @@ const templateProductCatalog = ensureElement<HTMLTemplateElement>('#card-catalog
 const templateProductPreview = ensureElement<HTMLTemplateElement>('#card-preview');
 const templateProductBasket = ensureElement<HTMLTemplateElement>('#card-basket');
 const templateBasket = ensureElement<HTMLTemplateElement>('#basket');
+const templateOrderForm = ensureElement<HTMLTemplateElement>('#order');
 
 // Создание классов отображения
 const mainPage = new MainPage(mainPageContainer, events);
@@ -51,6 +53,7 @@ const modal = new Modal(modalContainer, events);
 const productPreview = new ProductPreview(cloneTemplate(templateProductPreview), events);
 const productBasket = new ProductBasket(cloneTemplate(templateProductBasket), events);
 const basket = new Basket(cloneTemplate(templateBasket),events);
+const orderForm = new OrderForm(cloneTemplate(templateOrderForm), events);
 
 //Реакция на изменения данных в каталоге products: changed
 events.on('products:changed', (products:IProduct[])=>{
@@ -105,6 +108,17 @@ events.on('product:changed', (id:TId)=>{
         return card.render({...item, index:index+1});
     })
     basket.render({listProducts: productsInBasket, total: basketData.calculatePrice(), checkEmptyBasket: (basketData.checkLength()===0)})
+})
+
+// Нажав в корзине "Оформить" заполняем массив товаров и открываем модалку с методом оплаты и адресом
+
+events.on('modal-order:open', () => {
+    orderData.setOrderProduct({total:basketData.calculatePrice(), items:basketData.getIdListProducts()});
+    modal.render({content:orderForm.render({valid:orderForm.getValid()})});
+})
+
+events.on('order:valid', ()=>{
+    orderData.setUserPayAddress({address:orderForm.address, payment: orderForm.payment});
 })
 
 

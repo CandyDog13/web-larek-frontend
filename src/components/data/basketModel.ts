@@ -43,4 +43,10 @@ export class BasketModel implements IBasketModel {
     checkLength() {
         return this._items.length;
     }
+
+    getIdListProducts() {
+        return this._items.map(item => {
+          return item.id
+        })
+      }
 }

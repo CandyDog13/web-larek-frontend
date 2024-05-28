@@ -83,7 +83,17 @@ export interface IBasket {
     listProducts: HTMLElement[];
     checkEmptyBasket: boolean;
     total: number
-  }
+}
+
+export interface IForm {
+    valid: boolean;
+    error: string;
+    reset(): void;
+}
+
+export interface IOrderForm{
+
+}
 
 export type TProductMainPage = Omit<IProduct, 'description'>;
 
