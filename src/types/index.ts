@@ -92,10 +92,22 @@ export interface IForm {
     reset(): void;
 }
 
-
+export interface IFormState {
+    valid: boolean;
+}
 
 export interface IOrderForm{
+    payment: TPayment;
+    address: string;
+}
 
+export interface IContactsForm {
+    email: string;
+    phone: string;
+}
+
+export interface ISuccess {
+    description: string;
 }
 
 export type TProductMainPage = Omit<IProduct, 'description'>;
@@ -117,3 +129,5 @@ export type TSuccessData = { id: string, total: number}
 export type TInfoOrder = Pick<IOrderData, 'payment' | 'address'| 'email' | 'phone'| 'total' | "items" >
 
 export type TId = {id: string};
+
+export type TSuccess = {description: string};

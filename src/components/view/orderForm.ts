@@ -17,17 +17,18 @@ export class OrderForm extends Form<IOrderForm> implements IOrderForm {
         this.inputAddress = ensureElement<HTMLInputElement>('input[name=address]', container);
         this.cardPayButton.addEventListener('click', (evt)=>{this.handleActive(evt)});
         this.cashPayButton.addEventListener('click', (evt)=>{this.handleActive(evt)});
-        this.inputAddress.addEventListener('input', ()=> this.getValid());
+        this.inputAddress.addEventListener('input', ()=> this.valid);
     }   
 
-    handleActive(evt:Event){
+    protected handleActive(evt:Event){
         const buttonActive = evt.target as HTMLButtonElement;
         this.removeActiveButtons();
         buttonActive.classList.add('button_alt-active');
-        this.getValid()
+        // this.getValid()
+        this.valid;
     }
 
-    removeActiveButtons() {
+    protected removeActiveButtons() {
         this.cardPayButton.classList.remove('button_alt-active');
         this.cashPayButton.classList.remove('button_alt-active');
     }
@@ -43,21 +44,29 @@ export class OrderForm extends Form<IOrderForm> implements IOrderForm {
 
     get address() {
         return this.inputAddress.value
-      }
+    }
 
-    getValid() {
+    get valid() {
         if(Boolean(this.inputAddress.value) && Boolean(this.payment)) {
             this.error='';
-            this.valid=true;
-        } else  if (!Boolean(this.inputAddress.value) && Boolean(this.payment)) {
+            super.valid=true;
+            return true
+        } else  if (!this.inputAddress.value && Boolean(this.payment)) {
             this.error='Укажите адрес';
-            this.valid=false;
-        } else if (Boolean(this.inputAddress.value) && !Boolean(this.payment)) {
+            super.valid=false;
+            return false;
+        } else if (Boolean(this.inputAddress.value) && !this.payment) {
             this.error='Укажите способ оплаты';
-            this.valid=false;
+            super.valid=false;
+            return false;
         } else {
             this.error='Укажите способ оплаты и адрес';
-            this.valid= false;
+            super.valid=false;
+            return false;
         }
+    }
+
+    set valid(value:boolean) {
+        super.valid=value;
     }
 }

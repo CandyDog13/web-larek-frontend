@@ -1,10 +1,10 @@
-import { IForm } from "../../types";
+import { IForm, IFormState } from "../../types";
 import { ensureAllElements, ensureElement } from "../../utils/utils";
 import { Component } from "../base/component";
 import { IEvents } from "../base/events";
 
 
-export abstract class Form<T> extends Component<T> implements IForm {
+export abstract class Form<T> extends Component<IFormState> implements IForm {
     protected submitFormButton: HTMLButtonElement;
     protected errorElement: HTMLElement;
     protected inputList: HTMLInputElement[];
@@ -21,6 +21,7 @@ export abstract class Form<T> extends Component<T> implements IForm {
             this.events.emit(`${this.container.name}:submit`);
         });
     }
+    
 
     set valid(valid:boolean) {
         this.setDisabled(this.submitFormButton, !valid)
@@ -34,9 +35,9 @@ export abstract class Form<T> extends Component<T> implements IForm {
 		this.container.reset();
 	}
 
-    // render(data: Partial<T> & IFormState): HTMLElement {
-    //     const {valid, ...otherFormData} = data;
-    //     this.valid = valid;
-    //     return super.render(otherFormData)
-    //   }
+    render(data: Partial<T> & IFormState): HTMLElement {
+        const {valid, ...otherFormData} = data;
+        this.valid = valid;
+        return super.render(otherFormData)
+    }
 }
