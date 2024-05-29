@@ -20,6 +20,7 @@ export interface IOrderData {
     setUserPayAddress(userData:TUserPayAddress):void;
     setUserEmailPhone(userData:TUserEmailTelephone):void;
     setOrderProduct(userData:TOrderData):void;
+    getOrder():TInfoOrder;
 }
 
 export interface IProductList {
@@ -45,7 +46,7 @@ export interface IAppApi {
     getProducts(): Promise<IProduct[]>;
     // getProductById(id: string): Promise<IProduct>;
     // postOrder(order: ICustomer): Promise<TSuccessData>;
-  }
+}
 
 export interface IProductView {
     id: string;

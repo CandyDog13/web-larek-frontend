@@ -51,28 +51,23 @@ export interface IProduct {
     price: number | null;
     image: string;
     category: string;
-    _id: string;
+    id: string;
 }
 ```
 
-Покупатель
-
+Данные заказа
 ```
-export interface IUser {
-    payment: string;
+export interface IOrderData {
+    payment: TPayment;
     address: string;
     email: string;
-    number: string;
-}
-
-```
-
-Отправка заказа
-
-```
-export interface IOrder {
-    _id: string;
+    phone: string;
+    items: string[];
     total: number;
+
+    setUserPayAddress(userData:TUserPayAddress):void;
+    setUserEmailPhone(userData:TUserEmailTelephone):void;
+    setOrderProduct(userData:TOrderData):void;
 }
 ```
 
@@ -81,23 +76,113 @@ export interface IOrder {
 ```
 export interface IProductList {
     products: IProduct[];
-    total: number;
-    preview: string | null;
+    getProductById(productId:string): IProduct;
     
 }
 ```
-Описание корзины
+Описание модели корзины
 
 ```
 export interface IBasketModel {
-    totalOrder:TOrderTotal;
-    items: Map<string, number>;
+    items: IProduct[];
+    addProcuct(product:IProduct):void;
+    removeProduct(id:string):void;
+}
 ```
+
+Описание модели успешного оформления заказа
+```
+export interface ISuccessData {
+    orderSuccess: TSuccessData;
+}
+
+```
+
+Описание интерфейса получения данных через Api
+```
+export interface IAppApi {
+    getProducts(): Promise<IProduct[]>;
+    // getProductById(id: string): Promise<IProduct>;
+    // postOrder(order: ICustomer): Promise<TSuccessData>;
+}
+```
+
+Отображение товара
+```
+export interface IProductView {
+    id: string;
+    title: string;
+    price: string;
+}
+```
+
+Отображение товара в корзине
+```
+
+export interface IProductBasket {
+    index: number;
+}
+
+```
+
+Отображение товара в каталоге
+```
+export interface IProductCatalog {
+    image: string;
+    category: string;
+}
+```
+
+Отображение превью товара
+```
+export interface IProductPreview {
+    description: string;
+    checkPrice: boolean;
+    stateTitleButton: boolean;
+}
+```
+
+Отображение интерфейса главной страницы
+```
+export interface IMainPage {
+    catalog: HTMLElement[];
+    basketCounter: number;
+}
+
+```
+
+Отображение модального окна
+```
+export interface IModal {
+    content: HTMLElement;
+    open(): void;
+    close(): void;
+}
+```
+
+Отображение модального окна корзины
+```
+export interface IBasket {
+    listProducts: HTMLElement[];
+    checkEmptyBasket: boolean;
+    total: number
+}
+```
+
+Отображение формы
+```
+export interface IForm {
+    valid: boolean;
+    error: string;
+    reset(): void;
+}
+```
+
 
 Данные товара, используемые на главном экране
 
 ```
-export type TProductMainPage = Pick<IProduct, 'title' | 'price' | 'image' | 'category'>
+export type TProductMainPage = Omit<IProduct, 'description'>;
 ```
 
 Данные финальной суммы заказа
@@ -121,7 +206,32 @@ export type TUserPayAddress = Pick<IUser, 'address' | 'payment'>
 Данные покупателя в форме заполнения электронной почты и телефона
 
 ```
-export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
+export type TUserEmailTelephone = Pick<IOrderData, 'email' | 'phone'>
+```
+
+Данные для заказа из корзины
+```
+export type TOrderData = Pick<IOrderData, 'total' | 'items'>
+```
+
+Выбор метода оплаты
+```
+export type TPayment = 'card' | 'cash'
+```
+
+Параметры данных успешного заказа
+```
+export type TSuccessData = { id: string, total: number} 
+```
+
+Данные с информацией для заказа
+```
+export type TInfoOrder = Pick<IOrderData, 'payment' | 'address'| 'email' | 'phone'| 'total' | "items" >
+```
+
+Получение id элемента
+```
+export type TId = {id: string};
 ```
 
 ## Архитектура приложения
@@ -135,7 +245,13 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 
 #### Класс Api
 
-Содержит в себе базовую логику отправки запросов. В конструктор передается базовый адрес сервера и опциональный объект с заголовками запросов.  
+Содержит в себе базовую логику отправки запросов. В конструктор передается базовый адрес сервера и опциональный объект с заголовками запросов.\
+Поля класса:\
+- `readonly baseUrl: string;` - базовый URL адрес ресурса для Api
+- `protected options: RequestInit;` - объект настроек для формирования запроса\
+
+Конструктор принимает параметры для заполнения полей класса.
+
 Методы:
 - `get` - выполняет GET запрос на переданный в параметрах endpoint и возвращает promise с объектом, которым ответил сервер
 - `post` - принимает объект с данными, которые будут переданы в JSON в теле запроса, и отправляет эти данные на endpoint переданный как параметр при вызове метода. По умолчанию выполняется `POST` запрос, но метод запроса может быть переопределен заданием третьего параметра при вызове.
@@ -149,9 +265,10 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 - `trigger` - возвращает функцию, при вызове которой инициализируется требуемое в параметрах событие;\
 
 #### Класс Component
-Базовый компонент, который в конструкторе создает базовый элемент. 
+Базовый компонент, который в конструкторе создает базовый элемент. Данный абстрактный класс служит шаблоном для других классов.
 - `setDisabled` - блокировка элемента
 - `setText` - установить текстовое содержимое
+- `protected setImage(element: HTMLImageElement, src: string, alt?: string)` - установить изображение
 - `render(data:Partial<T>):HTMLElement` - вернуть корневой DOM-элемент
 
 ### Слой данных
@@ -161,50 +278,90 @@ export type TUserEmailTelephone = Pick<IUser, 'email' | 'number'>
 Класс отвечает за хранение товаров на главной странице и просмотр отдельных товаров  
 Конструктор класса принимает инстант брокера событий  
 В полях класса хранятся следующие данные:
-- `_products: IProduct[];` - массив объектов товаров;
-- `total: number;` - общее количество товаров;
-- `preview: string | null;` - id товара, который необходимо открыть в модальном окне
-- `events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
+- `protected _products: IProduct[];` - массив объектов товаров;
+- `protected events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
 
-Также класс имеет метод для работы с данными.  
-`setProducts(products:IProduct[]):void;` - для загрузки из Api на страницу 
-`getProduct(productId:string): IProduct;` - возвращает товар по его id.\
-а также сеттеры и геттеры для сохранения и получения данных полей
+Также класс имеет метод для работы с данными, setter и getter. 
+- `set products(products:IProduct[])`- записывает массив продуктов в _products и устанавливает значение для events.
+- `get products()` - возвращает массив продуктов.
+- `getProductById(productId:string): IProduct;` - возвращает товар по его id.\
 
 #### Класс BasketModel
 
 Класс отвечает за хранение данных корзины товаров и работу с товарами в корзине\
 Конструктор класса принимает инстанты брокера событий\
 В полях хранятся следующие данные:
-- `_totalOrder:TOrderTotal;` - значение суммы заказов
-- `_items: Map<string, number>;` - список заказов/~~~
+- `_items: IProdict[]` - список заказов
 - `events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
 
 Методы взаимодействия: 
-- `addProduct(id:string):void;` - добавление нового товара в список заказов
+- `get items()` - получение массива товаров
+- `addProduct(product:IProduct):void;` - добавление нового товара в список заказов
 - `removeProduct(id:string):void;` - удаление товара из списка заказов
 - `clear():void;` - очистка списка товаров (очистка корзины товаров)
-- `calculatePrice():void` - вычисление общей суммы заказа в корзине
+- `calculatePrice():number` - вычисление общей суммы заказа в корзине
+- `checkProduct(id:string):boolean` - определяет наличие товара в корзине по его id
+- `checkLength():number` - определяет количество товаров в корзине
+- `getIdListProducts():string[]` - выводит список с значениями id товаров, добавленных в корзину
 
-#### Класс UserData
+
+#### Класс OrderData
 
 Класс отвечает за хранение данных о покупателе и позволяет работать с этими данными\
 Конструктор класса принимает инстант брокера событий
 В полях класса хранятся данные:
-- `payment: string;` - параметр вида оплаты
-- `address: string;` - адрес доставки
-- `email: string;` - электронная почта для заказа
-- `phone: string;` -  номер телефона покупателя
+- `protected payment: TPayment;` - параметр вида оплаты
+- `protected _address: string;` - адрес доставки
+- `protected _email: string;` - электронная почта для заказа
+- `protected _phone: string;` -  номер телефона покупателя
+- `protected _items: string[]` - список товаров в корзине
+- `protected _total: number` - общая стоимость товаров в корзине
 - `events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
 
-Также в классе присутстуют методы для работы с данными:
+Также в классе присутстуют методы для работы с данными, а также setter:
 
+- `set payment(payment:TPayment)` - запись способа оплаты
+- `set address(address:string)` - запись адреса покупателя
+- `set email(email:string)` - запись электронной почты покупателя
+- `set phone(phone:string)` - запись номера телефона покупателя
+- `set items(items:string[])` - запись списка id товаров заказа
+- `set total(total:number)` - запись суммы заказа
 - `setUserPayAddress(userData:TUserPayAddress):void;` - метод позволяет сохранить данные об адресе и методе оплаты
 - `setUserEmailPhone(userData:TUserEmailTelephone):void;` - метод позволяет сохранить данные о номере телефона и адресе электронной почты покупателя
-- `checkUserValidation(data:Record<keyof IUser, string>):boolean;` - проверка на валидность введенных значений
+- `setOrderProduct(userData:TOrderData)` - метод позволяет сохранить данные о сумме заказа и список id товаров
+- `getOrder():TInfoOrder` - возвращает все данные о заказе
+
+#### Класс SuccessData
+
+Класс отвечает за данные, полученные с сервера после оформления заказа.
+
+Поля класса:
+- `protected _orderSuccess: TSuccessData` - данные о заказе
+- `events: IEvents` - экземпляр класса `EventEmitter` для инициализации событий при изменении данных.
+
+Методы:
+
+- `set orderSuccess(data:TSuccessData)` - сохранение данных с сервера о заказе
+- `get orderSuccess()` - получение сохраненных данных о заказе
 
 ### Классы представления
 Все классы представления отвечают за отображение внутри контейнета (DOM - элемент) передаваемых в них данных
+
+#### Класс Product
+Расширяет класс Component. Является абстрактным классом для составления отображений состояний карточек. Включает в себя общие поля карточек.
+
+Поля класса:
+- `protected _title: HTMLHeadingElement` - HTML элемент, отвечающий за имя товара
+- `protected _price: HTMLElement` - HTML элемент, отвечающий за отображение цены товара
+- `protected _id: string` - id карточки выбранного товара
+
+Методы:
+- `set title(value:string)` - запись имени товара
+- `get title()` - получение имени товара
+- `set price(value:string)` - запись стоимости товара
+- `get price()` - получение стоимости товара
+- `set id(id:string)` - запись id товара
+- `get id()` - получение id товара
 
 #### Класс Modal
 Реализует модальное окно. Так же предоставляет методы `open` и `close` для управления отображением модельного окна. Устанавливает слушатели для закрытия модального окна. Наследует базовый компонент `Component`
