@@ -25,17 +25,18 @@ export interface IOrderData {
 
 export interface IProductList {
     products: IProduct[];
-    // total: number;
-    // setProducts(products:IProduct[]):void;
     getProductById(productId:string): IProduct;
-
 }
 
 export interface IBasketModel {
-    // totalOrder:TOrderTotal;
     items: IProduct[];
     addProduct(product:IProduct):void;
     removeProduct(id:string):void;
+    clear():void;
+    calculatePrice(): number;
+    checkProduct(id: string): boolean;
+    checkLength(): number;
+    getIdListProducts(): string[];
 }
 
 export interface ISuccessData {
@@ -44,8 +45,8 @@ export interface ISuccessData {
 
 export interface IAppApi {
     getProducts(): Promise<IProduct[]>;
-    // getProductById(id: string): Promise<IProduct>;
-    // postOrder(order: ICustomer): Promise<TSuccessData>;
+    getProduct(id: string): Promise<IProduct>;
+    postOrder(order: TInfoOrder): Promise<TSuccessData>;
 }
 
 export interface IProductView {
@@ -64,6 +65,7 @@ export interface IProductCatalog {
 }
 
 export interface IProductPreview {
+    image: string;
     description: string;
     checkPrice: boolean;
     stateTitleButton: boolean;
@@ -72,6 +74,7 @@ export interface IProductPreview {
 export interface IMainPage {
     catalog: HTMLElement[];
     basketCounter: number;
+    locked: boolean;
 }
 
 export interface IModal {

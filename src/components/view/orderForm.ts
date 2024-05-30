@@ -24,7 +24,6 @@ export class OrderForm extends Form<IOrderForm> implements IOrderForm {
         const buttonActive = evt.target as HTMLButtonElement;
         this.removeActiveButtons();
         buttonActive.classList.add('button_alt-active');
-        // this.getValid()
         this.valid;
     }
 

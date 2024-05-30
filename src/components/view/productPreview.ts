@@ -23,8 +23,6 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
     }
     set image(src: string) {
         this.setImage(this._image,src,this.title);
-        // this._image.src = src;
-        // this._image.alt = this.title
     }
 
     set description(value: string) {

@@ -7,15 +7,12 @@ import { IEvents } from "../base/events";
 export abstract class Form<T> extends Component<IFormState> implements IForm {
     protected submitFormButton: HTMLButtonElement;
     protected errorElement: HTMLElement;
-    protected inputList: HTMLInputElement[];
     protected container: HTMLFormElement;
     
     constructor(container: HTMLFormElement, events: IEvents) {
         super(container, events);
         this.submitFormButton = ensureElement<HTMLButtonElement>('button[type="submit"]', container);
         this.errorElement = ensureElement<HTMLSpanElement>('.form__errors', container);
-        // this.inputList = ensureAllElements<HTMLInputElement>('.form__input', container)
-
         this.container.addEventListener('submit', (e: Event) => {
             e.preventDefault();
             this.events.emit(`${this.container.name}:submit`);

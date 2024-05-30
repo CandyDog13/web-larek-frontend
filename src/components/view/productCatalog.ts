@@ -2,7 +2,6 @@ import { IProductCatalog } from "../../types";
 import { ensureElement } from "../../utils/utils";
 import { Product } from "./product";
 import { IEvents } from "../base/events";
-import { cloneTemplate } from "../../utils/utils";
 
 export class ProductCatalog<T> extends Product<T> implements IProductCatalog {
     protected _image: HTMLImageElement;
