@@ -124,7 +124,9 @@ events.on('contacts:submit', ()=> {
     const dataOrderInformation = orderData.getOrder();
     api.postOrder(dataOrderInformation).then((data:TSuccessData)=> {
         successData.orderSuccess=data;
-        basketData.clear;
+        basketData.clear();
+        basket.listProducts=[];
+        mainPage.basketCounter=0;
         orderForm.reset();
         contactsForm.reset();
     }).catch(console.error);

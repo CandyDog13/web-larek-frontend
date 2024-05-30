@@ -15,9 +15,7 @@ export class ProductCatalog<T> extends Product<T> implements IProductCatalog {
     }
 
     set image(src: string) {
-        // this.setImage(this._image,src,this.title);
-        this._image.src = src;
-        this._image.alt = this.title
+        this.setImage(this._image,src,this.title);
     }
     
     set category(value: string) {

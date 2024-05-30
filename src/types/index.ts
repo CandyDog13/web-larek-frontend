@@ -115,10 +115,6 @@ export interface ISuccess {
 
 export type TProductMainPage = Omit<IProduct, 'description'>;
 
-export type TOrderTotal = Pick<IOrderData, 'total'>
-
-export type TBasket = Pick<IProduct, 'title'| 'price'> & TOrderTotal
-
 export type TUserPayAddress = Pick<IOrderData, 'address' | 'payment'>
 
 export type TUserEmailTelephone = Pick<IOrderData, 'email' | 'phone'>

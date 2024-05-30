@@ -217,18 +217,6 @@ export interface ISuccess {
 export type TProductMainPage = Omit<IProduct, 'description'>;
 ```
 
-Данные финальной суммы заказа
-
-```
-export type TOrderTotal = Pick<IOrder, 'total'>
-```
-
-Данные, необходимые для формирования корзины
-
-```
-export type TBasket = Pick<IProduct, 'title'| 'price'> & TOrderTotal>
-```
-
 Данные покупателя в форме заполнения адреса и способа оплаты
 
 ```
@@ -264,6 +252,11 @@ export type TInfoOrder = Pick<IOrderData, 'payment' | 'address'| 'email' | 'phon
 Получение id элемента
 ```
 export type TId = {id: string};
+```
+
+Получение сообщения о потраченных синапсах
+```
+export type TSuccess = {description: string};
 ```
 
 ## Архитектура приложения
