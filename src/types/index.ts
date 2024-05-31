@@ -69,6 +69,7 @@ export interface IProductPreview {
     description: string;
     checkPrice: boolean;
     stateTitleButton: boolean;
+    category: string;
 }
 
 export interface IMainPage {

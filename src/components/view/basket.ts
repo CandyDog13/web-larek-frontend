@@ -21,7 +21,7 @@ export class Basket extends Component<IBasket> {
     }
 
     set total(price: number) {
-        this._totalPrice.textContent = price.toString() + ' Синапсов';
+        this.setText(this._totalPrice, price.toString() + ' Синапсов');
     }
 
     set checkEmptyBasket(value: boolean) {

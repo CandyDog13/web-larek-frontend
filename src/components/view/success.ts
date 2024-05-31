@@ -15,6 +15,6 @@ export class Success extends Component<TSuccess> implements ISuccess {
     }
   
     set description(total: string) {
-      this._description.textContent = `Списано ${total} синапсов`
+      this.setText(this._description, `Списано ${total} синапсов`);
     }
   }

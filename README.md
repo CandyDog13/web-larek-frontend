@@ -141,6 +141,7 @@ export interface IProductPreview {
     description: string;
     checkPrice: boolean;
     stateTitleButton: boolean;
+    category: string;
 }
 ```
 
@@ -426,6 +427,7 @@ export type TSuccess = {description: string};
 - `protected _description: HTMLElement` - HTML элемент, отвечающий за отображение описания товара
 - `buttonBuyRemove: HTMLButtonElement` - HTML элемент, отвечающий за кнопку для покупки или удаления товара в корзине
 - `protected _image: HTMLImageElement` - HTML элемент, отвечающий за отображение картинки товара в предпросмотре
+- `protected _category: HTMLSpanElement` - HTML элемент, отвечающий за категорию товара
 
 Методы:
 - `set image(src:string):void` - запись данных изображения товара
@@ -433,7 +435,10 @@ export type TSuccess = {description: string};
 - `get description(): string` - получение данных подробного описания товара
 - `set checkPrice(value: boolean): void` - установка состояния кнопки с проверкой цены на наличие бесценных товаров
 - `get checkPrice(): boolean` - получения состояния кнопки
-- `set stateTitleButton(value:boolean)` - установка названия кнопки с проверкой наличия товара в корзине 
+- `set stateTitleButton(value:boolean)` - установка названия кнопки с проверкой наличия товара в корзине
+- `set category(value: string): void` - запись данных категории товара
+- `get category(): string` - получение названия категории товара
+- `protected addCategoryClass(value: string)` - метод для присвоения нужного цвета категории по ее названию посредством добавления определенного класса в css для html элемента.
 
 #### Класс MainPage
 Расширяет класс Component. Служит для отображения корзины в шапке сайта и показа количества добавленных товаров в нее, также служит для отображения блока с товарами на главной странице.

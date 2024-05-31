@@ -8,10 +8,16 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
     protected _description: HTMLElement;
     protected buttonBuyRemove: HTMLButtonElement;
     protected _image:HTMLImageElement;
+    protected _category: HTMLSpanElement;
+
+    // Одним из вариантов можно брать и расширять класс productCatalog
+    // Количество дублирующегося кода сократится, но в перспективе, если изменится вид каталога, то превью будет зависимым
+    // поэтому воизбежании таких зависимостей дублируется код
 
     constructor(container:HTMLElement, events: IEvents) {
         super(container,events);
         this._image = ensureElement<HTMLImageElement>('.card__image', container);
+        this._category = ensureElement<HTMLSpanElement>('.card__category', container);
         this._description = ensureElement<HTMLElement>('.card__text', container);
         this.buttonBuyRemove = ensureElement<HTMLButtonElement>('.card__button', container);
         this.buttonBuyRemove.addEventListener('click', ()=> {
@@ -33,6 +39,15 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
         return this._description.textContent ?? '';
     }
 
+    set category(value: string) {
+        this.setText(this._category, value);
+        this.addCategoryClass(value)
+    }
+    
+    get category() {
+        return this._category.textContent ?? '';
+    }
+
     set checkPrice(value: boolean) {
         if (!value) {
             this.buttonBuyRemove.disabled = !value;
@@ -52,6 +67,26 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
             this.buttonBuyRemove.textContent = "Убрать из корзины"
         } else {
             this.buttonBuyRemove.textContent  = "В корзину"
+        }
+    }
+
+    protected addCategoryClass(value: string) {
+        switch(value) {
+            case 'софт-скил':
+                this._category.classList.add('card__category_soft');
+            break
+            case 'дополнительное':
+                this._category.classList.add('card__category_additional');
+            break
+            case 'хард-скил':
+                this._category.classList.add('card__category_hard');
+            break
+            case 'кнопка':
+                this._category.classList.add('card__category_button');
+            break
+            case 'другое':
+                this._category.classList.add('card__category_other');
+            break
         }
     }
 }

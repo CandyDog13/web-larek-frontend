@@ -17,6 +17,6 @@ export class ProductBasket extends Product<IProductBasket> implements IProductBa
     }
 
     set index(value: number) {
-        this._index.textContent=value.toString();
+        this.setText(this._index, value.toString());
     }
 }

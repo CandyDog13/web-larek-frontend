@@ -19,11 +19,11 @@ export class MainPage extends Component<IMainPage> implements IMainPage {
     }
     
        set catalog(cards: HTMLElement[]) {
-          this._catalog.replaceChildren(...cards)
+            this._catalog.replaceChildren(...cards)
        }
     
        set basketCounter(value: number) {
-          this._basketCounter.textContent = String(value);
+            this.setText(this._basketCounter, String(value));
        }
 
        set locked(value: boolean) {
