@@ -71,6 +71,7 @@ events.on('products:changed', (products:IProduct[])=>{
 // Открытие предпросмотра товара по клику на главном экране
 events.on('modal-preview: open',(id:TId) => {
     const previewData = productsList.getProductById(id.id);
+    console.log(previewData)
     if (previewData) {
         modal.render({content: productPreview.render({...previewData, checkPrice:Boolean(previewData.price), stateTitleButton: basketData.checkProduct(previewData.id)})});
         modal.open();

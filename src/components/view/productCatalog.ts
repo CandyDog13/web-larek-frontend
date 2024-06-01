@@ -28,7 +28,7 @@ export class ProductCatalog<T> extends Product<T> implements IProductCatalog {
     }
 
     protected addCategoryClass(value: string) {
-        switch(value) {
+        switch(value.toLowerCase()) {
             case 'софт-скил':
                 this._category.classList.add('card__category_soft');
             break
@@ -41,7 +41,7 @@ export class ProductCatalog<T> extends Product<T> implements IProductCatalog {
             case 'кнопка':
                 this._category.classList.add('card__category_button');
             break
-            case 'другое':
+            default:
                 this._category.classList.add('card__category_other');
             break
         }

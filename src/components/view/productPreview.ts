@@ -41,7 +41,9 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
 
     set category(value: string) {
         this.setText(this._category, value);
+        this.removeCssClasses();
         this.addCategoryClass(value)
+        console.log(value)
     }
     
     get category() {
@@ -88,5 +90,9 @@ export class ProductPreview extends Product<IProductPreview> implements IProduct
                 this._category.classList.add('card__category_other');
             break
         }
+    }
+
+    protected removeCssClasses() {
+        this._category.classList.remove('card__category_soft','card__category_additional','card__category_hard','card__category_button','card__category_other');
     }
 }
